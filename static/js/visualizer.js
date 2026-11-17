@@ -1,18 +1,21 @@
 /**
  * DFA-Min Cytoscape.js Graph Visualizer Module.
  * Renders interactive state diagrams for Original and Minimized DFAs.
+ * Aesthetic: Acme / Financial Luxury Dark Theme with Amber Accents.
  */
 
-// Distinct color palette for partition equivalence classes
+// Distinct color palette for partition equivalence classes:
+// Block 0: Blue (#2563eb) - always contains initial state
+// Block 1: Green (#10b981) - contains accepting states
 const PARTITION_COLORS = [
-  "#3b82f6", // Blue
-  "#10b981", // Emerald
-  "#a855f7", // Purple
+  "#2563eb", // Blue (Block 0, Initial State)
+  "#10b981", // Emerald Green (Block 1, Accepting States)
   "#f59e0b", // Amber
-  "#06b6d4", // Cyan
+  "#8b5cf6", // Purple
   "#ec4899", // Pink
-  "#84cc16", // Lime
-  "#f43f5e", // Rose
+  "#06b6d4", // Cyan
+  "#f97316", // Warm Orange
+  "#14b8a6", // Teal
 ];
 
 class DFAVisualizer {
@@ -33,38 +36,40 @@ class DFAVisualizer {
       boxSelectionEnabled: false,
       autounselectify: false,
       style: [
-        // Default State Node
+        // Default State Node (Sleek dark obsidian)
         {
           selector: "node",
           style: {
             "content": "data(label)",
             "text-valign": "center",
             "text-halign": "center",
-            "font-family": "'Fira Code', 'Cascadia Code', monospace",
+            "font-family": "'Fira Code', 'Inter', monospace",
             "font-size": "13px",
             "font-weight": "bold",
             "color": "#ffffff",
-            "background-color": "#1e293b",
-            "border-width": 2.5,
-            "border-color": "#38bdf8",
-            "width": 52,
-            "height": 52,
+            "background-color": "#121620",
+            "border-width": 2,
+            "border-color": "#334155",
+            "width": 54,
+            "height": 54,
             "transition-property": "background-color, border-color, border-width, transform",
             "transition-duration": "0.3s",
           },
         },
-        // Initial State (Purple accent)
+        // Initial State (Blue fill with Cyan bold border)
         {
           selector: "node[?is_initial]",
           style: {
-            "border-color": "#a855f7",
+            "background-color": "#1d4ed8",
+            "border-color": "#38bdf8",
             "border-width": 3.5,
           },
         },
-        // Accepting State (Double Circle border)
+        // Accepting State (Double Circle Green border with Green fill)
         {
           selector: "node[?is_accepting]",
           style: {
+            "background-color": "#064e3b",
             "border-style": "double",
             "border-width": 7,
             "border-color": "#10b981",
@@ -74,47 +79,51 @@ class DFAVisualizer {
         {
           selector: "node[?is_initial][?is_accepting]",
           style: {
+            "background-color": "#1e3a8a",
+            "border-style": "double",
+            "border-width": 7,
             "border-color": "#10b981",
-            "background-blacken": -0.2,
           },
         },
-        // Unreachable State (Dimmed & Red warning)
+        // Unreachable State (Dashed Red border & Dimmed Red)
         {
           selector: "node[?is_unreachable]",
           style: {
+            "background-color": "#2e080b",
             "border-color": "#ef4444",
             "border-style": "dashed",
-            "opacity": 0.45,
+            "border-width": 2.5,
+            "opacity": 0.65,
           },
         },
         // Highlighted Active State (during simulation)
         {
           selector: "node.active-highlight",
           style: {
-            "background-color": "#f59e0b",
-            "border-color": "#fef08a",
+            "background-color": "#f97316",
+            "border-color": "#fde047",
             "border-width": 4,
-            "color": "#000000",
+            "color": "#ffffff",
             "z-index": 999,
           },
         },
-        // Transitions (Directed Edges)
+        // Transitions (Directed Edges with Amber/Orange Accents)
         {
           selector: "edge",
           style: {
             "content": "data(label)",
             "curve-style": "bezier",
             "target-arrow-shape": "triangle",
-            "target-arrow-color": "#94a3b8",
-            "line-color": "#64748b",
+            "target-arrow-color": "#f97316",
+            "line-color": "#475569",
             "width": 2,
             "arrow-scale": 1.2,
             "font-family": "'Fira Code', monospace",
             "font-size": "11px",
             "font-weight": "bold",
-            "color": "#38bdf8",
-            "text-background-opacity": 0.9,
-            "text-background-color": "#0f172a",
+            "color": "#fb923c",
+            "text-background-opacity": 0.95,
+            "text-background-color": "#090b10",
             "text-background-padding": "3px",
             "text-background-shape": "roundrectangle",
             "text-rotation": "autorotate",
@@ -127,8 +136,8 @@ class DFAVisualizer {
         {
           selector: "edge.active-edge",
           style: {
-            "line-color": "#f59e0b",
-            "target-arrow-color": "#f59e0b",
+            "line-color": "#f97316",
+            "target-arrow-color": "#fbbf24",
             "width": 3.5,
             "color": "#fbbf24",
             "z-index": 998,
@@ -149,22 +158,71 @@ class DFAVisualizer {
     this.cy.elements().remove();
     this.cy.add(elements);
 
-    // Apply partition block colors if supplied
-    if (partitionMap) {
-      this.cy.nodes().forEach((node) => {
-        const stateId = node.id();
-        if (partitionMap[stateId] !== undefined) {
-          const colorIdx = partitionMap[stateId] % PARTITION_COLORS.length;
-          const color = PARTITION_COLORS[colorIdx];
+    this.applyPartitionColors(partitionMap);
+    this.applyLayout("circle");
+  }
+
+  applyPartitionColors(partitionMap) {
+    if (!this.cy) return;
+    this.cy.nodes().forEach((node) => {
+      const stateId = node.id();
+      const isInitial = Boolean(node.data("is_initial"));
+      const isAccepting = Boolean(node.data("is_accepting"));
+      const isUnreachable = Boolean(node.data("is_unreachable"));
+
+      if (isUnreachable) {
+        node.style({
+          "background-color": "#2e080b",
+          "border-color": "#ef4444",
+          "border-style": "dashed",
+          "border-width": 2.5,
+          "opacity": 0.65,
+        });
+        return;
+      }
+
+      if (partitionMap && partitionMap[stateId] !== undefined) {
+        const colorIdx = partitionMap[stateId] % PARTITION_COLORS.length;
+        const color = PARTITION_COLORS[colorIdx];
+        node.style({
+          "background-color": color,
+          "border-style": isAccepting ? "double" : "solid",
+          "border-width": isAccepting ? 7 : (isInitial ? 3.5 : 2),
+          "border-color": isAccepting ? "#10b981" : (isInitial ? "#38bdf8" : "rgba(255, 255, 255, 0.7)"),
+        });
+      } else {
+        // Restore standard styling
+        if (isInitial && isAccepting) {
           node.style({
-            "background-color": color,
-            "border-color": "#ffffff",
+            "background-color": "#1e3a8a",
+            "border-style": "double",
+            "border-width": 7,
+            "border-color": "#10b981",
+          });
+        } else if (isInitial) {
+          node.style({
+            "background-color": "#1d4ed8",
+            "border-style": "solid",
+            "border-width": 3.5,
+            "border-color": "#38bdf8",
+          });
+        } else if (isAccepting) {
+          node.style({
+            "background-color": "#064e3b",
+            "border-style": "double",
+            "border-width": 7,
+            "border-color": "#10b981",
+          });
+        } else {
+          node.style({
+            "background-color": "#121620",
+            "border-style": "solid",
+            "border-width": 2,
+            "border-color": "#334155",
           });
         }
-      });
-    }
-
-    this.applyLayout("circle");
+      }
+    });
   }
 
   applyLayout(layoutName = "circle") {

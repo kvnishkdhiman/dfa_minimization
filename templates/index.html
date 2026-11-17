@@ -7,11 +7,11 @@
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Top Header Navigation -->
+  <!-- Top Header Navigation (Original Layout) -->
   <header>
     <div class="brand">
       <div class="brand-logo">δ*</div>
@@ -24,22 +24,22 @@
     <!-- Navigation Tabs -->
     <nav class="nav-tabs">
       <button class="nav-btn active" data-tab="tab-studio">
-        <span>⚙️</span> Minimization Studio
+        <span></span> Minimization Studio
       </button>
       <button class="nav-btn" data-tab="tab-distinguishing">
-        <span>⚡</span> Distinguishing Strings
+        <span></span> Distinguishing Strings
       </button>
       <button class="nav-btn" data-tab="tab-testing">
-        <span>🧪</span> String Testing & Proof
+        <span></span> String Testing & Proof
       </button>
       <button class="nav-btn" data-tab="tab-team-docs">
-        <span>📚</span> Architecture & Team Lab
+        <span></span> Architecture & Team Lab
       </button>
     </nav>
 
     <!-- Header Preset Selector -->
     <div class="header-actions">
-      <span style="font-size: 0.8rem; color: var(--text-muted);">Preset:</span>
+      <span class="preset-label">Preset:</span>
       <select id="preset-select" class="preset-select">
         <option value="textbook_6_state">Textbook 6-State DFA (Hopcroft)</option>
         <option value="unreachable_states">DFA with Unreachable States</option>
@@ -53,12 +53,10 @@
   <!-- Main Container -->
   <main>
 
-    <!-- ==========================================
-         TAB 1: MINIMIZATION STUDIO
-         ========================================== -->
+
     <div id="tab-studio" class="tab-content active">
 
-      <!-- Metrics Row -->
+      <!-- Metrics Row (Original Layout) -->
       <div class="metrics-row">
         <div class="metric-card">
           <div class="metric-val" id="metric-orig-states">6</div>
@@ -73,7 +71,7 @@
           <div class="metric-label">Minimized States |Q'|</div>
         </div>
         <div class="metric-card">
-          <div class="metric-val" id="metric-reduction" style="color: #34d399;">33%</div>
+          <div class="metric-val text-gradient-gold" id="metric-reduction">33%</div>
           <div class="metric-label">State Space Reduction</div>
         </div>
       </div>
@@ -86,9 +84,9 @@
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <span>📝</span> DFA Formal Specification
+                <span></span> DFA Formal Specification
               </div>
-              <span class="badge badge-info">M = (Q, Σ, δ, q₀, F)</span>
+              <span class="badge badge-gold">M = (Q, Σ, δ, q₀, F)</span>
             </div>
 
             <!-- Validation and Reachability Alerts -->
@@ -110,7 +108,7 @@
 
             <!-- Initial State q0 -->
             <div class="form-group">
-              <label class="form-label" for="input-initial">Initial State q₀</label>
+              <label class="form-label" for="input-initial">Initial State q₀ (Blue Fill)</label>
               <select id="input-initial" class="form-input" style="cursor: pointer;">
                 <option value="A">A</option>
               </select>
@@ -118,7 +116,7 @@
 
             <!-- Accepting States F -->
             <div class="form-group">
-              <label class="form-label" for="input-accepting">Accepting States F (Hold Ctrl to select multiple)</label>
+              <label class="form-label" for="input-accepting">Accepting States F (Double Circle, Green)</label>
               <select id="input-accepting" class="form-input" multiple size="3" style="cursor: pointer; height: 75px;">
                 <option value="C" selected>C</option>
                 <option value="D" selected>D</option>
@@ -135,11 +133,11 @@
 
             <!-- Actions -->
             <div class="btn-group">
-              <button id="btn-validate-dfa" class="btn btn-primary" style="flex: 1;">
-                <span>✓</span> Validate & Run
+              <button id="btn-validate-dfa" class="btn btn-secondary" style="flex: 1;">
+                <span>✓</span> Validate DFA
               </button>
-              <button id="btn-run-minimize" class="btn btn-success" style="flex: 1;">
-                <span>⚡</span> Minimize DFA
+              <button id="btn-run-minimize" class="btn btn-primary" style="flex: 1;">
+                <span></span> Minimize DFA
               </button>
             </div>
 
@@ -149,10 +147,10 @@
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <span>🔗</span> Equivalent State Pairs
+                <span></span> Equivalent State Pairs
               </div>
             </div>
-            <div id="equivalent-pairs-list" style="display: flex; flex-wrap: wrap;">
+            <div id="equivalent-pairs-list" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
               <!-- Equivalence pair badges -->
             </div>
           </div>
@@ -162,29 +160,29 @@
         <!-- Right Column: Interactive Visualizations & Stepper -->
         <div class="viz-panel">
           
-          <!-- Visualization Canvas Tabs / Cards -->
+          <!-- Original DFA State Diagram -->
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <span>🕸️</span> Original DFA State Diagram
+                <span></span> Original DFA State Diagram
               </div>
               <div class="graph-toolbar">
-                <button class="btn btn-secondary btn-sm btn-icon" data-viz-action="zoom-in" data-target-graph="original" title="Zoom In">+</button>
-                <button class="btn btn-secondary btn-sm btn-icon" data-viz-action="zoom-out" data-target-graph="original" title="Zoom Out">−</button>
-                <button class="btn btn-secondary btn-sm btn-icon" data-viz-action="fit" data-target-graph="original" title="Fit to View">⊡</button>
-                <button class="btn btn-secondary btn-sm" data-viz-action="layout-circle" data-target-graph="original">Circle</button>
-                <button class="btn btn-secondary btn-sm" data-viz-action="layout-cose" data-target-graph="original">Force</button>
-                <button class="btn btn-secondary btn-sm" data-viz-action="layout-breadth" data-target-graph="original">Tree</button>
+                <button class="btn btn-tool-icon" data-viz-action="zoom-in" data-target-graph="original" title="Zoom In">+</button>
+                <button class="btn btn-tool-icon" data-viz-action="zoom-out" data-target-graph="original" title="Zoom Out">−</button>
+                <button class="btn btn-tool-icon" data-viz-action="fit" data-target-graph="original" title="Fit to View">⊡</button>
+                <button class="btn btn-tool" data-viz-action="layout-circle" data-target-graph="original">Circle</button>
+                <button class="btn btn-tool" data-viz-action="layout-cose" data-target-graph="original">Force</button>
+                <button class="btn btn-tool" data-viz-action="layout-breadth" data-target-graph="original">Tree</button>
               </div>
             </div>
 
             <div id="cy-original" class="graph-container"></div>
 
             <div class="graph-legend">
-              <div class="legend-item"><span class="legend-dot initial"></span> Initial State</div>
-              <div class="legend-item"><span class="legend-dot accepting"></span> Accepting State (Double Circle)</div>
-              <div class="legend-item"><span class="legend-dot unreachable"></span> Unreachable State</div>
-              <div class="legend-item"><span class="legend-dot equivalent"></span> Active / Highlighted</div>
+              <div class="legend-item"><span class="legend-dot initial"></span> Initial State q₀ (Blue Fill)</div>
+              <div class="legend-item"><span class="legend-dot accepting"></span> Accepting State (Double Circle, Green)</div>
+              <div class="legend-item"><span class="legend-dot unreachable"></span> Unreachable State (Dashed Red)</div>
+              <div class="legend-item"><span class="legend-dot equivalent"></span> Active / Highlighted (Yellow)</div>
             </div>
           </div>
 
@@ -192,11 +190,11 @@
           <div class="card stepper-card">
             <div class="card-header">
               <div class="card-title">
-                <span>🔄</span> Step-by-Step Partition Refinement Workspace
+                <span></span> Step-by-Step Partition Refinement Workspace
               </div>
               <div class="stepper-status">
-                <span id="step-counter" style="color: var(--text-muted); font-size: 0.8rem;">Step 1 of 3</span>
-                <span id="step-status-badge" class="badge badge-info">Initializing P₀</span>
+                <span id="step-counter" style="color: var(--text-muted); font-size: 0.8rem; font-family: var(--font-mono);">Step 1 of 3</span>
+                <span id="step-status-badge" class="badge badge-gold">Initializing P₀</span>
               </div>
             </div>
 
@@ -206,7 +204,7 @@
                 <button id="btn-step-reset" class="btn btn-secondary btn-sm" title="Reset to P₀">⏮️ Reset</button>
                 <button id="btn-step-prev" class="btn btn-secondary btn-sm" title="Previous Partition">◀️ Previous</button>
                 <button id="btn-step-next" class="btn btn-primary btn-sm" title="Next Partition Split">▶️ Next Step</button>
-                <button id="btn-step-play" class="btn btn-success btn-sm" title="Auto Play Algorithm">▶️ Play</button>
+                <button id="btn-step-play" class="btn btn-play btn-sm" title="Auto Play Algorithm">▶️ Play</button>
                 <button id="btn-step-end" class="btn btn-secondary btn-sm" title="Jump to Final Fixed Point">⏭️ End</button>
               </div>
 
@@ -235,11 +233,11 @@
                 <span>✨</span> Constructed Minimized DFA
               </div>
               <div class="graph-toolbar">
-                <button class="btn btn-secondary btn-sm btn-icon" data-viz-action="zoom-in" data-target-graph="minimized" title="Zoom In">+</button>
-                <button class="btn btn-secondary btn-sm btn-icon" data-viz-action="zoom-out" data-target-graph="minimized" title="Zoom Out">−</button>
-                <button class="btn btn-secondary btn-sm btn-icon" data-viz-action="fit" data-target-graph="minimized" title="Fit to View">⊡</button>
-                <button class="btn btn-secondary btn-sm" data-viz-action="layout-circle" data-target-graph="minimized">Circle</button>
-                <button class="btn btn-secondary btn-sm" data-viz-action="layout-cose" data-target-graph="minimized">Force</button>
+                <button class="btn btn-tool-icon" data-viz-action="zoom-in" data-target-graph="minimized" title="Zoom In">+</button>
+                <button class="btn btn-tool-icon" data-viz-action="zoom-out" data-target-graph="minimized" title="Zoom Out">−</button>
+                <button class="btn btn-tool-icon" data-viz-action="fit" data-target-graph="minimized" title="Fit to View">⊡</button>
+                <button class="btn btn-tool" data-viz-action="layout-circle" data-target-graph="minimized">Circle</button>
+                <button class="btn btn-tool" data-viz-action="layout-cose" data-target-graph="minimized">Force</button>
               </div>
             </div>
 
@@ -261,12 +259,12 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">
-            <span>⚡</span> Distinguishing String Generator
+            <span></span> Distinguishing String Generator
           </div>
-          <span class="badge badge-info">Shortest w ∈ Σ* such that δ*(p, w) ∈ F ⊕ δ*(q, w) ∈ F</span>
+          <span class="badge badge-gold">Shortest w ∈ Σ* such that δ*(p, w) ∈ F ⊕ δ*(q, w) ∈ F</span>
         </div>
 
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.6;">
           Two states <code>p</code> and <code>q</code> are distinguishable if there exists at least one input string <code>w</code> that drives one state to an accepting state and the other to a non-accepting state. DFA-Min uses BFS over state pairs to discover the minimal-length distinguishing string proving why they cannot be merged.
         </p>
 
@@ -280,19 +278,19 @@
             <select id="select-state-q" class="form-input"></select>
           </div>
           <button id="btn-find-distinguishing" class="btn btn-primary" style="height: 38px;">
-            <span>🔍</span> Find Distinguishing String
+            <span></span> Find Distinguishing String
           </button>
           <button id="btn-compute-dist-table" class="btn btn-secondary" style="height: 38px;">
-            <span>📊</span> Compute All Pairs Table
+            <span></span> Compute All Pairs Table
           </button>
         </div>
 
         <!-- Result Card -->
-        <div id="distinguishing-result-card" style="display: none; background: rgba(31, 41, 55, 0.4); border-radius: var(--radius-md); padding: 1.25rem; border: 1px solid var(--border-color); margin-top: 1rem;">
+        <div id="distinguishing-result-card" style="display: none; background: rgba(18, 22, 32, 0.6); border-radius: var(--radius-md); padding: 1.25rem; border: 1px solid var(--border-color); margin-top: 1rem;">
           
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
             <div style="font-size: 1.1rem; font-weight: 700;">
-              Distinguishing String: <code id="dist-string-val" style="color: var(--accent-cyan); background: #000; padding: 0.2rem 0.6rem; border-radius: 4px;"></code>
+              Distinguishing String: <code id="dist-string-val" style="color: var(--accent-gold); background: #000; padding: 0.2rem 0.6rem; border-radius: 4px; font-family: var(--font-mono);"></code>
             </div>
             <span id="dist-status-badge" class="badge"></span>
           </div>
@@ -322,19 +320,19 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">
-            <span>🧪</span> Dual Automata String Simulation (Level 1 Testing)
+            <span></span> Dual Automata String Simulation (Level 1 Testing)
           </div>
-          <span class="badge badge-info">Simultaneous Path Execution</span>
+          <span class="badge badge-gold">Simultaneous Path Execution</span>
         </div>
 
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.6;">
           Enter an input string to simultaneously execute and trace state transitions on both the <strong>Original DFA</strong> and the <strong>Minimized DFA</strong>.
         </p>
 
-        <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.25rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap;">
           <input type="text" id="test-string-input" class="form-input" style="max-width: 380px;" value="0101" placeholder="Enter input string (e.g. 0101, 1010)">
           <button id="btn-run-simulation" class="btn btn-primary">
-            <span>▶</span> Run Simulation on Both DFAs
+            <span></span> Run Simulation on Both DFAs
           </button>
         </div>
 
@@ -366,24 +364,24 @@
       <div class="card" style="margin-top: 1.5rem;">
         <div class="card-header">
           <div class="card-title">
-            <span>🛡️</span> Formal Language Equivalence Verification (Level 2 Proof)
+            <span></span> Formal Language Equivalence Verification (Level 2 Proof)
           </div>
-          <span class="badge badge-success">Product Automaton State Exploration</span>
+          <span class="badge badge-gold">Product Automaton M₁ × M₂</span>
         </div>
 
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.6;">
           Testing sample strings only confirms consistency on a finite subset. To mathematically prove that <code>L(Original) ≡ L(Minimized)</code> for <em>all</em> infinite strings across Σ*, DFA-Min explores the complete synchronous product automaton <code>M₁ × M₂</code> and proves that the symmetric difference language <code>L(M₁) △ L(M₂)</code> is strictly empty.
         </p>
 
-        <button id="btn-run-formal-proof" class="btn btn-success" style="padding: 0.65rem 1.25rem;">
-          <span>⚖️</span> Run Formal Product Automaton Verification
+        <button id="btn-run-formal-proof" class="btn btn-primary" style="padding: 0.65rem 1.4rem;">
+          <span></span> Run Formal Product Automaton Verification
         </button>
 
-        <div id="formal-proof-container" style="display: none;">
+        <div id="formal-proof-container" style="display: none; margin-top: 1.25rem;">
           <div class="certificate-box">
             <div class="cert-header">
               <div id="cert-status-title" class="cert-title"></div>
-              <span class="badge badge-success">MATHEMATICAL PROOF</span>
+              <span class="badge badge-gold">MATHEMATICAL PROOF</span>
             </div>
             <div id="cert-statement" class="cert-statement"></div>
             <div id="cert-math" class="cert-math"></div>
@@ -411,7 +409,7 @@
 
         <div class="doc-section">
           <h2>Three-Layer System Architecture</h2>
-          <div style="background: rgba(0, 0, 0, 0.4); border-radius: var(--radius-md); padding: 1.25rem; border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.85rem; color: #93c5fd; line-height: 1.6;">
+          <div style="background: rgba(0, 0, 0, 0.45); border-radius: var(--radius-md); padding: 1.25rem; border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.85rem; color: #fde68a; line-height: 1.6;">
             <strong>[Frontend Presentation Layer]</strong><br>
             • Cytoscape.js Graph Engine (Canvas, layouts, physics, dynamic animations)<br>
             • Partition Refinement Stepper UI (P₀ to P_final with signature inspection)<br>
@@ -447,7 +445,7 @@
 
             <div class="team-card">
               <div class="team-role">Member 2</div>
-              <h3>Core Algorithm</h3>
+              <h3>Core Minimizer Engine</h3>
               <ul>
                 <li>Reachability analysis (BFS graph traversal)</li>
                 <li>Partition refinement algorithm engine</li>
@@ -458,10 +456,10 @@
 
             <div class="team-card">
               <div class="team-role">Member 3</div>
-              <h3>Visualization</h3>
+              <h3>Visualization & Cytoscape</h3>
               <ul>
                 <li>Cytoscape.js graph configuration</li>
-                <li>Visual state merging & partition coloring</li>
+                <li>Initial Blue & Accepting Green styling</li>
                 <li>Interactive graph controls (zoom, layouts)</li>
                 <li>Path animations for simulation traces</li>
               </ul>
@@ -482,45 +480,10 @@
               <div class="team-role">Member 5</div>
               <h3>Frontend Integration & Docs</h3>
               <ul>
-                <li>Modern dark-slate UI design & layout</li>
+                <li>Black & Yellow-Amber dark theme & layout</li>
                 <li>API routing & client-server integration</li>
                 <li>Step playback controls & timer logic</li>
                 <li>Lab documentation & milestone presentations</li>
-              </ul>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Lab Milestones -->
-        <div class="doc-section">
-          <h2>Evaluation Milestones Plan</h2>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
-            
-            <div class="card" style="margin-bottom: 0;">
-              <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">Milestone 1 (M1): Simulator Design (5 Marks)</h3>
-              <p>Theoretical correctness and architectural feasibility:</p>
-              <ul style="list-style: none; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
-                <li>✓ Formal DFA specification and definition</li>
-                <li>✓ Problem definition and educational objectives</li>
-                <li>✓ Three-layer architecture diagram</li>
-                <li>✓ Complete system flowchart</li>
-                <li>✓ Partition refinement pseudocode</li>
-                <li>✓ Manually calculated Hopcroft 6-state textbook benchmark</li>
-              </ul>
-            </div>
-
-            <div class="card" style="margin-bottom: 0;">
-              <h3 style="color: #34d399; margin-bottom: 0.5rem;">Milestone 2 (M2): Implementation & Testing (9 Marks)</h3>
-              <p>Fully working software demonstration and verification:</p>
-              <ul style="list-style: none; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8;">
-                <li>✓ Interactive web application with Cytoscape.js</li>
-                <li>✓ Step-by-step partition refinement stepper with explanations</li>
-                <li>✓ Automatic unreachable state pruning</li>
-                <li>✓ Shortest distinguishing string generator with parallel trace</li>
-                <li>✓ Dual string testing simulation</li>
-                <li>✓ Formal product-automaton equivalence verification</li>
-                <li>✓ Automated unit test suite with 100% pass rate</li>
               </ul>
             </div>
 
@@ -533,20 +496,17 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer>
-    DFA-Min: Complete Automata Theory Simulation Lab Project &bull; Built with Python, Flask, Cytoscape.js, and Modern Web Standards
-  </footer>
-
-  <!-- Scripts -->
-  <script src="/static/vendor/cytoscape.min.js"></script>
-  <script>
-    if (typeof cytoscape === "undefined") {
-      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"><\\/script>');
-    }
-  </script>
+  <!-- External Cytoscape.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+  
+  <!-- DFA Preset Benchmark Data -->
   <script src="/static/js/presets.js"></script>
+  
+  <!-- Graph Visualization Controller -->
   <script src="/static/js/visualizer.js"></script>
+  
+  <!-- Main Application Logic & Stepper -->
   <script src="/static/js/app.js"></script>
+
 </body>
 </html>

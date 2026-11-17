@@ -43,14 +43,18 @@ class DFAMinimizer:
         non_accepting = sorted([s for s in states if s not in set(accepting)])
         alphabet = sorted(self.dfa.alphabet)
 
-        # Step 0: Initial Partition P0 = {F, Q \ F}
+        # Step 0: Initial Partition P0
         current_partitions: List[List[str]] = []
         if accepting and non_accepting:
-            # Standard partition: Accepting first, then non-accepting
-            current_partitions = [accepting, non_accepting]
+            # Place partition containing initial state first (Block 0 = Blue)
+            # and accepting states as Block 1 (Green)
+            if self.dfa.initial_state in set(accepting):
+                current_partitions = [accepting, non_accepting]
+            else:
+                current_partitions = [non_accepting, accepting]
             init_explanation = (
-                f"Initial Partition P0: Divided into accepting states F = {{{', '.join(accepting)}}} "
-                f"and non-accepting states Q \\ F = {{{', '.join(non_accepting)}}}. "
+                f"Initial Partition P0: Divided into non-accepting states Q \\ F = {{{', '.join(non_accepting)}}} "
+                f"and accepting states F = {{{', '.join(accepting)}}}. "
                 "These cannot be equivalent because the empty string distinguishes them."
             )
         elif accepting:
@@ -140,8 +144,19 @@ class DFAMinimizer:
                     # Block remained unified
                     next_partitions.append(block[:])
 
-            # Sort next partitions deterministically
-            next_partitions.sort(key=lambda b: (b[0] if b else ""))
+            # Sort next partitions deterministically:
+            # Priority 0: Contains initial state (always Block 0 -> Blue)
+            # Priority 1: Accepting blocks (Block 1 -> Green)
+            # Priority 2: Other blocks
+            def _partition_sort_key(b: List[str]):
+                if self.dfa.initial_state in b:
+                    return (0, b[0] if b else "")
+                elif any(s in self.dfa.accepting_states for s in b):
+                    return (1, b[0] if b else "")
+                else:
+                    return (2, b[0] if b else "")
+
+            next_partitions.sort(key=_partition_sort_key)
 
             if not any_block_split:
                 is_stable = True

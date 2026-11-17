@@ -422,14 +422,8 @@ function renderCurrentStep() {
   });
 
   // Color original graph nodes according to current step's partition
-  if (appState.originalViz && appState.originalViz.cy) {
-    appState.originalViz.cy.nodes().forEach((node) => {
-      const sId = node.id();
-      if (partitionMap[sId] !== undefined) {
-        const c = PARTITION_COLORS[partitionMap[sId] % PARTITION_COLORS.length];
-        node.style({ "background-color": c, "border-color": "#ffffff" });
-      }
-    });
+  if (appState.originalViz) {
+    appState.originalViz.applyPartitionColors(partitionMap);
   }
 
   // Explanation box
