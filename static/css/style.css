@@ -717,6 +717,271 @@ main {
   line-height: 1.6;
 }
 
+/* 5-Stage Lifecycle Stepper Tracker */
+.stepper-stages-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  background: rgba(10, 13, 20, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.stage-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.stage-num {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.stage-arrow {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+.stage-step.active {
+  color: #ffffff;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid var(--border-gold);
+}
+
+.stage-step.active .stage-num {
+  background: var(--gradient-gold);
+  color: #000000;
+  font-weight: 800;
+}
+
+.stage-step.completed {
+  color: var(--text-secondary);
+}
+
+.stage-step.completed .stage-num {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+/* Textbook Successor-Block Signature Analysis Table */
+.signature-analysis-card {
+  background: #0b0e16;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  margin: 0.85rem 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.sig-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sig-table-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.sig-table-hint {
+  font-size: 0.725rem;
+  color: var(--text-muted);
+}
+
+.sig-block-wrapper {
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.sig-block-wrapper:last-child {
+  margin-bottom: 0;
+}
+
+.sig-block-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(18, 22, 33, 0.7);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.8rem;
+}
+
+.sig-block-tag {
+  color: #ffffff;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+.sig-status-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-pill);
+  margin-left: auto;
+}
+
+.badge-split {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.badge-match {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.sig-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.sig-table th {
+  background: #080a10;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 0.4rem 0.65rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+}
+
+.sig-table td {
+  padding: 0.45rem 0.65rem;
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: center;
+  color: var(--text-main);
+}
+
+.sig-row {
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+.sig-row:hover {
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.sig-row:last-child td {
+  border-bottom: none;
+}
+
+.sig-state-cell {
+  font-weight: 700;
+}
+
+.sig-target-pill {
+  display: inline-block;
+  margin-left: 0.3rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 1px solid;
+}
+
+.sig-vector-cell {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.sig-subblock-chip {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-gold);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.725rem;
+  font-weight: 600;
+}
+
+.sig-unified-chip {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.725rem;
+  font-weight: 600;
+}
+
+.sig-p0-box {
+  background: rgba(18, 22, 33, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+}
+
+.sig-p0-title {
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+.sig-p0-pill {
+  flex: 1;
+  min-width: 200px;
+  background: #080a10;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.p0-pill-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  margin-right: 0.4rem;
+}
+
+.sig-stable-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  color: #34d399;
+  font-size: 0.85rem;
+}
+
 /* ==========================================================================
    TABS 2, 3, 4: DISTINGUISHING, TESTING & ARCHITECTURE
    ========================================================================== */

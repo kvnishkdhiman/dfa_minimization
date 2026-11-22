@@ -69,11 +69,14 @@ class DFAMinimizer:
         step_num = 0
         self.history.append({
             "step_number": step_num,
+            "step_type": "initial",
             "partitions": [block[:] for block in current_partitions],
             "num_blocks": len(current_partitions),
             "explanation": init_explanation,
             "splits": [],
             "signatures": {},
+            "alphabet": alphabet,
+            "unreachable_pruned": self.original_dfa.get_reachable_states()[1],
             "is_stable": False,
         })
 
@@ -111,14 +114,21 @@ class DFAMinimizer:
 
                     sig_tuple = tuple(targets)
                     sig_groups[sig_tuple].append(state)
+                    sig_label = "(" + ", ".join([f"P{t}" for t in targets]) + ")"
                     state_details[state] = {
                         "targets": targets,
+                        "signature_label": sig_label,
                         "by_symbol": symbol_dest_info,
                     }
 
                 signatures_in_step[f"Block_{block_idx}"] = {
+                    "block_index": block_idx,
+                    "block_label": f"P{block_idx}",
                     "original_block": block[:],
                     "state_details": state_details,
+                    "did_split": len(sig_groups) > 1,
+                    "groups_count": len(sig_groups),
+                    "sub_blocks": [sorted(grp) for grp in sig_groups.values()],
                 }
 
                 if len(sig_groups) > 1:
@@ -172,11 +182,13 @@ class DFAMinimizer:
 
             self.history.append({
                 "step_number": step_num,
+                "step_type": "fixed_point" if is_stable else "refinement",
                 "partitions": [b[:] for b in next_partitions],
                 "num_blocks": len(next_partitions),
                 "explanation": explanation,
                 "splits": splits_in_step,
                 "signatures": signatures_in_step,
+                "alphabet": alphabet,
                 "is_stable": is_stable,
             })
 

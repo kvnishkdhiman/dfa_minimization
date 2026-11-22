@@ -388,9 +388,12 @@ function renderCurrentStep() {
     statusBadge.className = "badge badge-success";
     statusBadge.textContent = "Stable Fixed Point Reached";
   } else {
-    statusBadge.className = "badge badge-info";
+    statusBadge.className = "badge badge-gold";
     statusBadge.textContent = `Partition Refinement Round ${appState.currentStepIndex}`;
   }
+
+  // Update 5-Stage Lifecycle Tracker
+  updateLifecycleStages(step, appState.currentStepIndex, stepCount);
 
   // Update partitions visualization
   const pContainer = document.getElementById("partition-blocks-container");
@@ -421,6 +424,9 @@ function renderCurrentStep() {
     pContainer.appendChild(blockEl);
   });
 
+  // Render Textbook Successor-Block Signature Analysis Table
+  renderSignatureAnalysisTable(step, appState.currentStepIndex);
+
   // Color original graph nodes according to current step's partition
   if (appState.originalViz) {
     appState.originalViz.applyPartitionColors(partitionMap);
@@ -429,7 +435,7 @@ function renderCurrentStep() {
   // Explanation box
   document.getElementById("step-explanation").textContent = step.explanation;
 
-  // Split details table
+  // Split details list
   const splitDetailsEl = document.getElementById("step-split-details");
   if (step.splits && step.splits.length > 0) {
     let splitHtml = '<div style="margin-top: 0.5rem; font-size: 0.85rem;"><strong>Splits triggered in this step:</strong><ul style="margin-left: 1.25rem; margin-top: 0.35rem;">';
@@ -441,6 +447,197 @@ function renderCurrentStep() {
   } else {
     splitDetailsEl.innerHTML = "";
   }
+}
+
+function updateLifecycleStages(step, currentIdx, totalSteps) {
+  const data = appState.minimizationData;
+  const sReach = document.getElementById("stage-reachability");
+  const sInit = document.getElementById("stage-init");
+  const sSig = document.getElementById("stage-signatures");
+  const sFix = document.getElementById("stage-fixedpoint");
+  const sQuot = document.getElementById("stage-quotient");
+
+  if (!sReach) return;
+
+  // Reset stage classes
+  [sReach, sInit, sSig, sFix, sQuot].forEach((el) => {
+    el.className = "stage-step";
+  });
+
+  // Stage 1: Reachability is always analyzed
+  const unreach = data.unreachable_states || [];
+  sReach.classList.add("completed");
+  const reachText = sReach.querySelector(".stage-text");
+  if (reachText) {
+    reachText.textContent = unreach.length > 0 ? `Reachability (${unreach.length} pruned)` : "Reachability (100%)";
+  }
+
+  // Stage 2: Initial P0
+  if (currentIdx === 0) {
+    sInit.classList.add("active");
+  } else {
+    sInit.classList.add("completed");
+  }
+
+  // Stage 3: Signature Refinement
+  if (currentIdx > 0 && !step.is_stable) {
+    sSig.classList.add("active");
+  } else if (currentIdx > 0 && step.is_stable) {
+    sSig.classList.add("completed");
+  }
+
+  // Stage 4: Fixed Point & Stage 5: Quotient DFA
+  if (step.is_stable) {
+    sFix.classList.add("active");
+    sQuot.classList.add("active");
+    sQuot.classList.add("completed");
+  }
+}
+
+function renderSignatureAnalysisTable(step, currentIdx) {
+  const container = document.getElementById("signature-table-container");
+  const content = document.getElementById("signature-tables-content");
+  const roundNumEl = document.getElementById("sig-round-num");
+  if (!container || !content) return;
+
+  const alphabet = (step.alphabet && step.alphabet.length > 0)
+    ? step.alphabet
+    : (appState.currentDfa && appState.currentDfa.alphabet ? appState.currentDfa.alphabet : ["0", "1"]);
+
+  if (currentIdx === 0) {
+    // Stage 2 / Step 0: Initial P0 epsilon-separation explanation
+    container.style.display = "block";
+    if (roundNumEl) roundNumEl.textContent = "0 (Initial P₀)";
+
+    let p0Html = `
+      <div class="sig-p0-box">
+        <div class="sig-p0-title"><strong>Initial Partition P₀ by Empty String ε Distinguishability:</strong></div>
+        <p style="margin: 0.4rem 0; font-size: 0.85rem; color: var(--text-secondary);">
+          At string length 0 (input <code>w = ε</code>), accepting states and non-accepting states produce strictly opposite acceptance outcomes:
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem;">
+          <div class="sig-p0-pill" style="border-left: 3px solid #2563eb;">
+            <span class="p0-pill-badge" style="background: #2563eb; color: #fff;">Block P₀</span>
+            <strong>Non-Accepting (Q \\ F):</strong> [${step.partitions[0] ? step.partitions[0].join(", ") : ""}]
+            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 2px;">δ*(q, ε) ∉ F → Rejected (Single Border)</div>
+          </div>
+          ${step.partitions.length > 1 ? `
+          <div class="sig-p0-pill" style="border-left: 3px solid #10b981;">
+            <span class="p0-pill-badge" style="background: #10b981; color: #fff;">Block P₁</span>
+            <strong>Accepting (F):</strong> [${step.partitions[1].join(", ")}]
+            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 2px;">δ*(q, ε) ∈ F → Accepted (Double Circle)</div>
+          </div>` : ""}
+        </div>
+      </div>
+    `;
+    content.innerHTML = p0Html;
+    return;
+  }
+
+  // Step > 0: Signature tables for each block analyzed
+  if (!step.signatures || Object.keys(step.signatures).length === 0) {
+    if (step.is_stable) {
+      container.style.display = "block";
+      if (roundNumEl) roundNumEl.textContent = `${currentIdx} (Stable)`;
+      content.innerHTML = `
+        <div class="sig-stable-banner">
+          <span style="font-size: 1.25rem;">✅</span>
+          <div>
+            <strong>Fixed-Point Convergence Reached:</strong> All states in every partition block possess identical transition signatures on every alphabet symbol. No further splits are possible!
+          </div>
+        </div>
+      `;
+    } else {
+      container.style.display = "none";
+    }
+    return;
+  }
+
+  container.style.display = "block";
+  if (roundNumEl) roundNumEl.textContent = `${currentIdx}`;
+
+  let html = "";
+  const sigBlocks = step.signatures;
+
+  for (const [blkKey, blkData] of Object.entries(sigBlocks)) {
+    const origBlock = blkData.original_block || [];
+    if (origBlock.length <= 1) continue; // single state blocks don't need signature table
+
+    const blkIdx = blkData.block_index !== undefined ? blkData.block_index : blkKey.replace("Block_", "");
+    const didSplit = blkData.did_split;
+    const subBlocks = blkData.sub_blocks || [];
+
+    html += `
+      <div class="sig-block-wrapper">
+        <div class="sig-block-header">
+          <span class="sig-block-tag" style="background: ${PARTITION_COLORS[blkIdx % PARTITION_COLORS.length]};">Block P${blkIdx}</span>
+          <span style="font-weight: 700; color: #fff;">States {${origBlock.join(", ")}}</span>
+          <span class="sig-status-badge ${didSplit ? 'badge-split' : 'badge-match'}">
+            ${didSplit ? `⚠️ SPLITS into ${subBlocks.length} Sub-blocks` : '✓ STABLE (Identical Signatures)'}
+          </span>
+        </div>
+
+        <table class="sig-table">
+          <thead>
+            <tr>
+              <th>State q</th>
+              ${alphabet.map((sym) => `<th>δ(q, ${sym}) → Target</th>`).join("")}
+              <th>Signature Vector</th>
+              <th>Outcome</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    const stateDetails = blkData.state_details || {};
+    origBlock.forEach((s) => {
+      const sInfo = stateDetails[s];
+      if (!sInfo) return;
+
+      const sigLabel = sInfo.signature_label || (sInfo.targets ? `(${sInfo.targets.map(t => 'P' + t).join(', ')})` : '-');
+
+      // Find which sub-block this state landed in if split
+      let outcomeBadge = "";
+      if (didSplit) {
+        const subIdx = subBlocks.findIndex((sb) => sb.includes(s));
+        outcomeBadge = `<span class="sig-subblock-chip">Sub-block ${subIdx + 1} {${subBlocks[subIdx] ? subBlocks[subIdx].join(", ") : s}}</span>`;
+      } else {
+        outcomeBadge = `<span class="sig-unified-chip">Unified in P${blkIdx}</span>`;
+      }
+
+      html += `
+        <tr class="sig-row" onmouseenter="if(appState.originalViz) appState.originalViz.highlightState('${s}')" onmouseleave="if(appState.originalViz) appState.originalViz.resetHighlights()">
+          <td class="sig-state-cell"><span class="state-chip">${s}</span></td>
+      `;
+
+      alphabet.forEach((sym) => {
+        const dest = (sInfo.by_symbol && sInfo.by_symbol[sym]) || {};
+        const tgtState = dest.target_state || "-";
+        const tgtBlk = dest.target_block_idx !== undefined ? dest.target_block_idx : "-";
+        const blkColor = tgtBlk !== "-" ? PARTITION_COLORS[tgtBlk % PARTITION_COLORS.length] : "#334155";
+        html += `
+          <td>
+            <code>${tgtState}</code>
+            <span class="sig-target-pill" style="border-color: ${blkColor}; color: ${blkColor};">P${tgtBlk}</span>
+          </td>
+        `;
+      });
+
+      html += `
+          <td class="sig-vector-cell"><code>${sigLabel}</code></td>
+          <td>${outcomeBadge}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  content.innerHTML = html;
 }
 
 function stepNext() {

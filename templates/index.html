@@ -190,7 +190,7 @@
           <div class="card stepper-card">
             <div class="card-header">
               <div class="card-title">
-                <span></span> Step-by-Step Partition Refinement Workspace
+                <span>🔄</span> Step-by-Step Partition Refinement Workspace
               </div>
               <div class="stepper-status">
                 <span id="step-counter" style="color: var(--text-muted); font-size: 0.8rem; font-family: var(--font-mono);">Step 1 of 3</span>
@@ -198,8 +198,36 @@
               </div>
             </div>
 
+            <!-- 5-Stage Minimization Lifecycle Tracker -->
+            <div class="stepper-stages-bar">
+              <div class="stage-step" id="stage-reachability">
+                <span class="stage-num">1</span>
+                <span class="stage-text">Reachability (BFS)</span>
+              </div>
+              <span class="stage-arrow">→</span>
+              <div class="stage-step" id="stage-init">
+                <span class="stage-num">2</span>
+                <span class="stage-text">Initial P₀</span>
+              </div>
+              <span class="stage-arrow">→</span>
+              <div class="stage-step" id="stage-signatures">
+                <span class="stage-num">3</span>
+                <span class="stage-text">Signature Splitting</span>
+              </div>
+              <span class="stage-arrow">→</span>
+              <div class="stage-step" id="stage-fixedpoint">
+                <span class="stage-num">4</span>
+                <span class="stage-text">Fixed Point</span>
+              </div>
+              <span class="stage-arrow">→</span>
+              <div class="stage-step" id="stage-quotient">
+                <span class="stage-num">5</span>
+                <span class="stage-text">Merged Quotient DFA</span>
+              </div>
+            </div>
+
             <!-- Stepper Controls -->
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;">
               <div class="btn-group">
                 <button id="btn-step-reset" class="btn btn-secondary btn-sm" title="Reset to P₀">⏮️ Reset</button>
                 <button id="btn-step-prev" class="btn btn-secondary btn-sm" title="Previous Partition">◀️ Previous</button>
@@ -217,6 +245,17 @@
             <!-- Current Partition Blocks Display -->
             <div id="partition-blocks-container" class="partition-blocks-view">
               <!-- Partition blocks rendered here -->
+            </div>
+
+            <!-- Textbook Successor-Block Signature Analysis Table -->
+            <div id="signature-table-container" class="signature-analysis-card" style="display: none;">
+              <div class="sig-table-header">
+                <span class="sig-table-title">📊 Successor-Block Signature Analysis (Round <span id="sig-round-num">1</span>)</span>
+                <span class="sig-table-hint">States with identical signatures stay grouped; divergent signatures trigger splits</span>
+              </div>
+              <div id="signature-tables-content" class="sig-tables-wrapper">
+                <!-- Dynamic signature tables for each multi-state block -->
+              </div>
             </div>
 
             <!-- Step Explanation Narrative -->
